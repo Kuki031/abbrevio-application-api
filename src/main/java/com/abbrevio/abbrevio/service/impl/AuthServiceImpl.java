@@ -4,6 +4,7 @@ import com.abbrevio.abbrevio.dto.LoginDTO;
 import com.abbrevio.abbrevio.dto.RegisterDTO;
 import com.abbrevio.abbrevio.entity.Role;
 import com.abbrevio.abbrevio.entity.User;
+import com.abbrevio.abbrevio.exception.CustomAuthException;
 import com.abbrevio.abbrevio.repository.RoleRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.security.JwtTokenProvider;
@@ -45,16 +46,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(RegisterDTO registerDto) throws Exception {
+    public String register(RegisterDTO registerDto) throws CustomAuthException {
 
         if (userRepository.existsByUsername(registerDto.getUsername())) {
-            throw new Exception("Username is already taken.");
+            throw new CustomAuthException("username is already taken");
         }
         if (userRepository.existsByEmail(registerDto.getEmail())) {
-            throw new Exception("E-mail already exists.");
+            throw new CustomAuthException("e-mail already exists");
         }
         User user = new User();
-        user.setName(registerDto.getName());
         user.setEmail(registerDto.getEmail());
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));

@@ -1,6 +1,7 @@
 package com.abbrevio.abbrevio.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Getter
@@ -8,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="roles")
+@Table(name="roles", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 public class Role {
 
     @Id
@@ -16,6 +17,6 @@ public class Role {
 
     private Integer id;
 
-    @Column(nullable = false)
+    @NotEmpty(message = "role name cannot be empty")
     private String name;
 }
