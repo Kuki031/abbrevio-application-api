@@ -1,5 +1,6 @@
 package com.abbrevio.abbrevio.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,7 +18,6 @@ public class GlobalExceptionHandler {
         err.getMessages().add(e.getMessage());
         err.setTimestamp(new Date());
         err.setStatusCode(HttpStatus.UNAUTHORIZED.value());
-
         return new ResponseEntity<>(err, HttpStatus.UNAUTHORIZED);
     }
 
@@ -29,5 +29,15 @@ public class GlobalExceptionHandler {
         err.setStatusCode(HttpStatus.BAD_REQUEST.value());
 
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomError> handleResourceNotFoundExceptions(EntityNotFoundException e) {
+        CustomError err = new CustomError();
+        err.getMessages().add(e.getMessage());
+        err.setTimestamp(new Date());
+        err.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
 }
