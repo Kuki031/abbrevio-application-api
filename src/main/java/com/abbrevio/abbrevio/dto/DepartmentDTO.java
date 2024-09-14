@@ -15,7 +15,7 @@ public class DepartmentDTO {
 
     private int id;
     @NotBlank(message = "department name cannot be blank")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "department name can only contain letters")
+    @Pattern(regexp = "^[a-zA-Z]+(\\s[a-zA-Z]+)*$", message = "department name can only contain letters")
     private String name;
     private int countOfEmployees;
 }

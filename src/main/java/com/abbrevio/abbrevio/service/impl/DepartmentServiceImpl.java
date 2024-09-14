@@ -37,16 +37,31 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDTO createDepartment(DepartmentDTO departmentDTO) {
-        return null;
+        Department newDepartment = new Department();
+        newDepartment.setCountOfEmployees(0);
+        newDepartment.setName(departmentDTO.getName());
+        departmentRepository.save(newDepartment);
+
+        return modelMapper.map(newDepartment, DepartmentDTO.class);
     }
 
     @Override
     public DepartmentDTO updateDepartment(DepartmentDTO departmentDTO, Integer id) {
-        return null;
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("resource does not exist"));
+
+        if (departmentDTO.getName() != null) {
+            department.setName(departmentDTO.getName());
+        }
+        Department savedDepartment = departmentRepository.save(department);
+
+        return modelMapper.map(savedDepartment, DepartmentDTO.class);
     }
 
     @Override
     public void deleteDepartment(Integer id) {
-
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("resource does not exist"));
+        departmentRepository.delete(department);
     }
 }
