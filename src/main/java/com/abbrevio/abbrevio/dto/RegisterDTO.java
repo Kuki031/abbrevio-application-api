@@ -1,5 +1,6 @@
 package com.abbrevio.abbrevio.dto;
 
+import com.abbrevio.abbrevio.entity.Department;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,4 +28,5 @@ public class RegisterDTO {
             message = "password must contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
     )
     private String password;
+    private Integer departmentId;
 }

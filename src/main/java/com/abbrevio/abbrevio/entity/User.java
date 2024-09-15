@@ -1,5 +1,6 @@
 package com.abbrevio.abbrevio.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class User {
     private Set<Role> roles;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department departmentId;
+    @JoinColumn(name = "department_id")
+    @JsonBackReference
+    private Department department;
 }

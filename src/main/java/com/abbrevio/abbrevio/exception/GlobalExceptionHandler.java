@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 
 @ControllerAdvice
@@ -39,5 +40,17 @@ public class GlobalExceptionHandler {
         err.setStatusCode(HttpStatus.NOT_FOUND.value());
 
         return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomError> handleDuplicateEntriesExceptions(SQLIntegrityConstraintViolationException e)
+    {
+        CustomError err = new CustomError();
+        System.out.println(e.getLocalizedMessage());
+        err.getMessages().add(e.getMessage());
+        err.setTimestamp(new Date());
+        err.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 }

@@ -23,6 +23,6 @@ public class Department {
     private String name;
     private int countOfEmployees;
 
-    @OneToMany(mappedBy = "departmentId", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<User> users;
 }

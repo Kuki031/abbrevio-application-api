@@ -3,6 +3,7 @@ package com.abbrevio.abbrevio.service.impl;
 import com.abbrevio.abbrevio.dto.DepartmentDTO;
 import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.repository.DepartmentRepository;
+import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.service.DepartmentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -15,11 +16,13 @@ import java.util.stream.Collectors;
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository, ModelMapper modelMapper) {
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository, ModelMapper modelMapper, UserRepository userRepository) {
         this.departmentRepository = departmentRepository;
         this.modelMapper = modelMapper;
+        this.userRepository = userRepository;
     }
 
     @Override

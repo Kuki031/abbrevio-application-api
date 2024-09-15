@@ -1,8 +1,12 @@
 package com.abbrevio.abbrevio.controller;
 
 import com.abbrevio.abbrevio.dto.DepartmentDTO;
+import com.abbrevio.abbrevio.dto.UserDTO;
+import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.service.DepartmentService;
+import com.abbrevio.abbrevio.service.UserService;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,9 +19,11 @@ import java.util.List;
 public class DepartmentController {
 
     private final DepartmentService departmentService;
+    private final UserService userService;
 
-    public DepartmentController(DepartmentService departmentService) {
+    public DepartmentController(DepartmentService departmentService, UserService userService) {
         this.departmentService = departmentService;
+        this.userService = userService;
     }
     @GetMapping("/{id}")
     public ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable Integer id) {
@@ -48,5 +54,12 @@ public class DepartmentController {
     public ResponseEntity<String> deleteDepartment(@PathVariable Integer id) {
         departmentService.deleteDepartment(id);
         return new ResponseEntity<>("Department with id " + id + " deleted successfully", HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<UserDTO>> getUsersByDepartment(@PathVariable int id)
+    {
+        return ResponseEntity.ok(userService.getUsersByDepartment(id));
     }
 }

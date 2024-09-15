@@ -2,13 +2,16 @@ package com.abbrevio.abbrevio.service.impl;
 
 import com.abbrevio.abbrevio.dto.LoginDTO;
 import com.abbrevio.abbrevio.dto.RegisterDTO;
+import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.entity.Role;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomAuthException;
+import com.abbrevio.abbrevio.repository.DepartmentRepository;
 import com.abbrevio.abbrevio.repository.RoleRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.security.JwtTokenProvider;
 import com.abbrevio.abbrevio.service.AuthService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,15 +28,17 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, DepartmentRepository departmentRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.departmentRepository = departmentRepository;
     }
 
     @Override
@@ -58,6 +63,13 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(registerDto.getEmail());
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+
+        if (registerDto.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(registerDto.getDepartmentId())
+                    .orElseThrow(() -> new EntityNotFoundException("resource does not exist"));
+            user.setDepartment(department);
+        }
+
         Set<Role> roles = new HashSet<>();
 
         Role userRole = roleRepository.findByName("ROLE_USER").get();
