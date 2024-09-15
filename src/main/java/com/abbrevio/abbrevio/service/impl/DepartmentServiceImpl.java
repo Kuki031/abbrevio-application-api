@@ -2,10 +2,10 @@ package com.abbrevio.abbrevio.service.impl;
 
 import com.abbrevio.abbrevio.dto.DepartmentDTO;
 import com.abbrevio.abbrevio.entity.Department;
+import com.abbrevio.abbrevio.exception.CustomNotFoundException;
 import com.abbrevio.abbrevio.repository.DepartmentRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.service.DepartmentService;
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDTO getDepartmentById(Integer id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("department does not exist."));
+                .orElseThrow(() -> new CustomNotFoundException(Department.class, "id", id));
         return modelMapper.map(department, DepartmentDTO.class);
     }
 
@@ -51,7 +51,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDTO updateDepartment(DepartmentDTO departmentDTO, Integer id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("resource does not exist"));
+                .orElseThrow(() -> new CustomNotFoundException(Department.class, "id", id));
 
         if (departmentDTO.getName() != null) {
             department.setName(departmentDTO.getName());
@@ -64,7 +64,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void deleteDepartment(Integer id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("resource does not exist"));
+                .orElseThrow(() -> new CustomNotFoundException(Department.class, "id", id));
         departmentRepository.delete(department);
     }
 }

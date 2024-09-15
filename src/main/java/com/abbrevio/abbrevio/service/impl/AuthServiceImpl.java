@@ -6,12 +6,12 @@ import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.entity.Role;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomAuthException;
+import com.abbrevio.abbrevio.exception.CustomNotFoundException;
 import com.abbrevio.abbrevio.repository.DepartmentRepository;
 import com.abbrevio.abbrevio.repository.RoleRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.security.JwtTokenProvider;
 import com.abbrevio.abbrevio.service.AuthService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -66,8 +66,9 @@ public class AuthServiceImpl implements AuthService {
 
         if (registerDto.getDepartmentId() != null) {
             Department department = departmentRepository.findById(registerDto.getDepartmentId())
-                    .orElseThrow(() -> new EntityNotFoundException("resource does not exist"));
+                    .orElseThrow(() -> new CustomNotFoundException(Department.class, "id", registerDto.getDepartmentId()));
             user.setDepartment(department);
+            department.setCountOfEmployees();
         }
 
         Set<Role> roles = new HashSet<>();

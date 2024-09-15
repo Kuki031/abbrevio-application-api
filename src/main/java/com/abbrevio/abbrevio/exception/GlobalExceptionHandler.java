@@ -43,6 +43,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<CustomError> handleCustomNotFoundException(CustomNotFoundException e)
+    {
+        CustomError err = new CustomError();
+        err.getMessages().add(String.format("%s with %s:%s does not exist", e.getEntity().getSimpleName(), e.getParameter(), e.getValue()));
+        err.setTimestamp(new Date());
+        err.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<CustomError> handleDuplicateEntriesExceptions(SQLIntegrityConstraintViolationException e)
     {
         CustomError err = new CustomError();
