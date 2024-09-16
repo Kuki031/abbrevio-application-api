@@ -3,6 +3,7 @@ package com.abbrevio.abbrevio.exception;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,7 +58,29 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CustomError> handleDuplicateEntriesExceptions(SQLIntegrityConstraintViolationException e)
     {
         CustomError err = new CustomError();
-        System.out.println(e.getLocalizedMessage());
+        err.getMessages().add(e.getMessage());
+        err.setTimestamp(new Date());
+        err.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomError> handleHttpMessageNotReadableException(HttpMessageNotReadableException e)
+    {
+        CustomError err = new CustomError();
+        String modifiedErrorMsg = e.getMessage().substring(0, e.getMessage().indexOf(":"));
+        err.getMessages().add(modifiedErrorMsg);
+        err.setTimestamp(new Date());
+        err.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomError> handleDefaultException(Exception e)
+    {
+        CustomError err = new CustomError();
         err.getMessages().add(e.getMessage());
         err.setTimestamp(new Date());
         err.setStatusCode(HttpStatus.BAD_REQUEST.value());
