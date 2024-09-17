@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.security.SignatureException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 
@@ -86,5 +87,16 @@ public class GlobalExceptionHandler {
         err.setStatusCode(HttpStatus.BAD_REQUEST.value());
 
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomError> handleSignatureException(SignatureException e)
+    {
+        CustomError err = new CustomError();
+        err.getMessages().add(e.getMessage());
+        err.setTimestamp(new Date());
+        err.setStatusCode(HttpStatus.FORBIDDEN.value());
+
+        return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
     }
 }

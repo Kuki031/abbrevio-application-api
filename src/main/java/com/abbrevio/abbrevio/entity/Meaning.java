@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,4 +26,7 @@ public class Meaning {
     @ManyToOne
     @JoinColumn(name = "abbreviation_id")
     private Abbreviation abbreviation;
+
+    @OneToMany(mappedBy = "meaning", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments;
 }

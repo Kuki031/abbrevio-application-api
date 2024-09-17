@@ -47,7 +47,7 @@ public class MeaningServiceImpl implements MeaningService {
 
         if (!meaning.getAbbreviation().getId().equals(abbreviation.getId()))
         {
-            throw new Exception(String.format("meaning with id '%s' does not belong to abbreviation with id '%s'", meaningId, abbreviationId));
+            throw new Exception(String.format("meaning with id %s does not belong to abbreviation with id %s", meaningId, abbreviationId));
         }
 
         return modelMapper.map(meaning, MeaningDTO.class);
@@ -77,7 +77,7 @@ public class MeaningServiceImpl implements MeaningService {
 
         if (!meaning.getAbbreviation().getId().equals(abbreviation.getId()))
         {
-            throw new Exception(String.format("meaning with id '%s' does not belong to abbreviation with id '%s'", meaningId, abbreviationId));
+            throw new Exception(String.format("meaning with id %s does not belong to abbreviation with id %s", meaningId, abbreviationId));
         }
 
         if (meaningDTO.getDescription() != null) {
@@ -99,7 +99,7 @@ public class MeaningServiceImpl implements MeaningService {
 
         if (!meaning.getAbbreviation().getId().equals(abbreviation.getId()))
         {
-            throw new Exception(String.format("meaning with id '%s' does not belong to abbreviation with id '%s'", meaningId, abbreviationId));
+            throw new Exception(String.format("meaning with id %s does not belong to abbreviation with id %s", meaningId, abbreviationId));
         }
 
         meaningRepository.delete(meaning);

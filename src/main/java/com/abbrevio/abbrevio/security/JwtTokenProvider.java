@@ -7,6 +7,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -70,6 +71,9 @@ public class JwtTokenProvider {
         }
         catch(IllegalArgumentException illegalArgumentException) {
             throw new Exception("JWT claims string is null or empty");
+        }
+        catch(SignatureException signatureException) {
+            throw new SignatureException("Signature does not match");
         }
     }
 }
