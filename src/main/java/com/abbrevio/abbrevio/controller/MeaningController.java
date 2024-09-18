@@ -2,11 +2,13 @@ package com.abbrevio.abbrevio.controller;
 
 import com.abbrevio.abbrevio.dto.MeaningDTO;
 import com.abbrevio.abbrevio.service.MeaningService;
+import com.abbrevio.abbrevio.service.VoteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -14,15 +16,17 @@ import java.util.Set;
 public class MeaningController {
 
     private final MeaningService meaningService;
+    private final VoteService voteService;
 
-    public MeaningController(MeaningService meaningService) {
+    public MeaningController(MeaningService meaningService, VoteService voteService) {
         this.meaningService = meaningService;
+        this.voteService = voteService;
     }
 
     @GetMapping("/{id}/meanings")
-    public ResponseEntity<Set<MeaningDTO>> getMeaningsForAbbreviation(@PathVariable Long id)
+    public ResponseEntity<List<MeaningDTO>> getMeaningsForAbbreviation(@PathVariable Long id)
     {
-        return ResponseEntity.ok(meaningService.getMeaningsForAbbreviation(id));
+        return ResponseEntity.ok(meaningService.findByAbbreviationIdOrderByCountOfVotes(id));
     }
 
     @GetMapping("/{abbrevId}/meanings/{meaningId}")
@@ -45,5 +49,12 @@ public class MeaningController {
     public ResponseEntity<HttpStatus> deleteMeaningForAbbreviation(@PathVariable Long abbrevId, @PathVariable Long meaningId) throws Exception {
         meaningService.deleteMeaningForAbbreviation(abbrevId, meaningId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/votes/{meaningId}/meanings")
+    public ResponseEntity<String> castVoteForMeaning(@PathVariable Long meaningId)
+    {
+        voteService.castVote(meaningId);
+        return ResponseEntity.ok("you voted for meaning with id "+meaningId);
     }
 }

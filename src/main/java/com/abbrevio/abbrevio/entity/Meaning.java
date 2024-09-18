@@ -29,4 +29,12 @@ public class Meaning {
 
     @OneToMany(mappedBy = "meaning", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "meaning", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Vote> vote;
+
+    public void setCountOfVotes()
+    {
+        this.countOfVotes++;
+    }
 }

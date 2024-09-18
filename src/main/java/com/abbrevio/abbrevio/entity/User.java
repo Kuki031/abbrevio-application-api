@@ -1,9 +1,11 @@
 package com.abbrevio.abbrevio.entity;
 
+import com.abbrevio.abbrevio.utils.VoteId;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.AbstractList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,4 +38,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Vote> vote;
 }

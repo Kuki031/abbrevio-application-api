@@ -99,4 +99,15 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomError> handleIllegalStateException(IllegalStateException e)
+    {
+        CustomError err = new CustomError();
+        err.getMessages().add(e.getMessage());
+        err.setTimestamp(new Date());
+        err.setStatusCode(HttpStatus.FORBIDDEN.value());
+
+        return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+    }
 }

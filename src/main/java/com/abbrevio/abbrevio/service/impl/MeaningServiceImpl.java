@@ -10,6 +10,7 @@ import com.abbrevio.abbrevio.service.MeaningService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,13 +28,9 @@ public class MeaningServiceImpl implements MeaningService {
     }
 
     @Override
-    public Set<MeaningDTO> getMeaningsForAbbreviation(Long id) {
-        Abbreviation abbreviation = abbreviationRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", id));
-
-        Set<Meaning> meanings = abbreviation.getMeanings();
-
-        return meanings.stream().map((meaning) -> modelMapper.map(meaning, MeaningDTO.class)).collect(Collectors.toSet());
+    public List<MeaningDTO> findByAbbreviationIdOrderByCountOfVotes(Long id) {
+        List<Meaning> meanings = meaningRepository.findByAbbreviationIdOrderByCountOfVotesDesc(id);
+        return meanings.stream().map((meaning) -> modelMapper.map(meaning, MeaningDTO.class)).collect(Collectors.toList());
     }
 
     @Override
