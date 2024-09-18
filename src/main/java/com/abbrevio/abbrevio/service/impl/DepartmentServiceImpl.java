@@ -56,6 +56,10 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (departmentDTO.getName() != null) {
             department.setName(departmentDTO.getName());
         }
+
+        if (departmentDTO.getCountOfEmployees() > 0) {
+            department.setCountOfEmployees(departmentDTO.getCountOfEmployees());
+        }
         Department savedDepartment = departmentRepository.save(department);
 
         return modelMapper.map(savedDepartment, DepartmentDTO.class);
