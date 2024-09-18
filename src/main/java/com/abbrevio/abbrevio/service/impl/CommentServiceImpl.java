@@ -4,6 +4,7 @@ import com.abbrevio.abbrevio.dto.CommentDTO;
 import com.abbrevio.abbrevio.entity.Comment;
 import com.abbrevio.abbrevio.entity.Meaning;
 import com.abbrevio.abbrevio.entity.User;
+import com.abbrevio.abbrevio.exception.CustomAuthException;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
 import com.abbrevio.abbrevio.repository.CommentRepository;
 import com.abbrevio.abbrevio.repository.MeaningRepository;
@@ -62,18 +63,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO getCommentForMeaningById(Long meaningId, Long commentId) throws Exception {
-        Meaning meaning = meaningRepository.findById(meaningId)
-                .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
-
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomNotFoundException(Comment.class, "id", commentId));
-
-        if (!meaning.getId().equals(comment.getMeaning().getId()))
+    public CommentDTO getCommentForMeaningById(Long meaningId, Long commentId) {
+        Comment comment = commentRepository.findByIdAndMeaningId(commentId, meaningId);
+        if (comment == null)
         {
-            throw new Exception(String.format("comment with id %s does not belong to the meaning with id %s", commentId, meaningId));
+            throw new CustomNotFoundException(Comment.class, "id", commentId);
         }
-
         return modelMapper.map(comment, CommentDTO.class);
     }
 
@@ -86,15 +81,11 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
 
-        Meaning meaning = meaningRepository.findById(meaningId)
-                .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
+        Comment comment = commentRepository.findByIdAndMeaningId(commentId, meaningId);
 
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomNotFoundException(Comment.class, "id", commentId));
-
-        if (!meaning.getId().equals(comment.getMeaning().getId()))
+        if (comment == null)
         {
-            throw new Exception(String.format("comment with id %s does not belong to the meaning with id %s", commentId, meaningId));
+            throw new CustomNotFoundException(Comment.class, "id", commentId);
         }
 
         if (!comment.getUser().getId().equals(user.getId()))
@@ -120,15 +111,10 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
 
-        Meaning meaning = meaningRepository.findById(meaningId)
-                .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
-
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomNotFoundException(Comment.class, "id", commentId));
-
-        if (!meaning.getId().equals(comment.getMeaning().getId()))
+        Comment comment = commentRepository.findByIdAndMeaningId(commentId, meaningId);
+        if (comment == null)
         {
-            throw new Exception(String.format("comment with id %s does not belong to the meaning with id %s", commentId, meaningId));
+            throw new CustomNotFoundException(Comment.class, "id", commentId);
         }
 
         if (!comment.getUser().getId().equals(user.getId()))

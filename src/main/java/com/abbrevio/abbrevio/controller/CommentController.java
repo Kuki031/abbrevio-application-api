@@ -32,7 +32,7 @@ public class CommentController {
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<CommentDTO> getCommentForMeaning(@PathVariable Long meaningId, @PathVariable Long commentId) throws Exception
+    public ResponseEntity<CommentDTO> getCommentForMeaning(@PathVariable Long meaningId, @PathVariable Long commentId)
     {
         return ResponseEntity.ok(commentService.getCommentForMeaningById(meaningId, commentId));
     }

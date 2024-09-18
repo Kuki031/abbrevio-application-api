@@ -32,7 +32,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public void castVote(Long meaningId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        var username = authentication.getName();
+        String username = authentication.getName();
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
@@ -55,7 +55,7 @@ public class VoteServiceImpl implements VoteService {
         }
         else
         {
-            throw new IllegalStateException("you have already voted for this meaning.");
+            throw new IllegalStateException("you have already voted for this meaning");
         }
     }
 }

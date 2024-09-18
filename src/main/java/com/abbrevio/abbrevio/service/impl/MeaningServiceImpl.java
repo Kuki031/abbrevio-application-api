@@ -2,6 +2,7 @@ package com.abbrevio.abbrevio.service.impl;
 
 import com.abbrevio.abbrevio.dto.MeaningDTO;
 import com.abbrevio.abbrevio.entity.Abbreviation;
+import com.abbrevio.abbrevio.entity.Comment;
 import com.abbrevio.abbrevio.entity.Meaning;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
 import com.abbrevio.abbrevio.repository.AbbreviationRepository;
@@ -11,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,22 +29,21 @@ public class MeaningServiceImpl implements MeaningService {
 
     @Override
     public List<MeaningDTO> findByAbbreviationIdOrderByCountOfVotes(Long id) {
+
+        Abbreviation abbreviation = abbreviationRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", id));
+
         List<Meaning> meanings = meaningRepository.findByAbbreviationIdOrderByCountOfVotesDesc(id);
         return meanings.stream().map((meaning) -> modelMapper.map(meaning, MeaningDTO.class)).collect(Collectors.toList());
     }
 
     @Override
-    public MeaningDTO getMeaningForAbbreviation(Long abbreviationId, Long meaningId) throws Exception {
+    public MeaningDTO getMeaningForAbbreviation(Long abbreviationId, Long meaningId) {
 
-        Abbreviation abbreviation = abbreviationRepository.findById(abbreviationId)
-                .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", abbreviationId));
-
-        Meaning meaning = meaningRepository.findById(meaningId)
-                .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
-
-        if (!meaning.getAbbreviation().getId().equals(abbreviation.getId()))
+        Meaning meaning = meaningRepository.findByIdAndAbbreviationId(meaningId, abbreviationId);
+        if (meaning == null)
         {
-            throw new Exception(String.format("meaning with id %s does not belong to abbreviation with id %s", meaningId, abbreviationId));
+            throw new CustomNotFoundException(Meaning.class, "id", meaningId);
         }
 
         return modelMapper.map(meaning, MeaningDTO.class);
@@ -65,16 +64,12 @@ public class MeaningServiceImpl implements MeaningService {
     }
 
     @Override
-    public MeaningDTO updateMeaningForAbbreviation(Long abbreviationId, Long meaningId, MeaningDTO meaningDTO) throws Exception {
-        Abbreviation abbreviation = abbreviationRepository.findById(abbreviationId)
-                .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", abbreviationId));
+    public MeaningDTO updateMeaningForAbbreviation(Long abbreviationId, Long meaningId, MeaningDTO meaningDTO){
+        Meaning meaning = meaningRepository.findByIdAndAbbreviationId(meaningId, abbreviationId);
 
-        Meaning meaning = meaningRepository.findById(meaningId)
-                .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
-
-        if (!meaning.getAbbreviation().getId().equals(abbreviation.getId()))
+        if (meaning == null)
         {
-            throw new Exception(String.format("meaning with id %s does not belong to abbreviation with id %s", meaningId, abbreviationId));
+            throw new CustomNotFoundException(Meaning.class, "id", meaningId);
         }
 
         if (meaningDTO.getDescription() != null) {
@@ -87,16 +82,12 @@ public class MeaningServiceImpl implements MeaningService {
     }
 
     @Override
-    public void deleteMeaningForAbbreviation(Long abbreviationId, Long meaningId) throws Exception {
-        Abbreviation abbreviation = abbreviationRepository.findById(abbreviationId)
-                .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", abbreviationId));
+    public void deleteMeaningForAbbreviation(Long abbreviationId, Long meaningId){
+        Meaning meaning = meaningRepository.findByIdAndAbbreviationId(meaningId, abbreviationId);
 
-        Meaning meaning = meaningRepository.findById(meaningId)
-                .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
-
-        if (!meaning.getAbbreviation().getId().equals(abbreviation.getId()))
+        if (meaning == null)
         {
-            throw new Exception(String.format("meaning with id %s does not belong to abbreviation with id %s", meaningId, abbreviationId));
+            throw new CustomNotFoundException(Meaning.class, "id", meaningId);
         }
 
         meaningRepository.delete(meaning);

@@ -3,12 +3,11 @@ package com.abbrevio.abbrevio.service;
 import com.abbrevio.abbrevio.dto.MeaningDTO;
 
 import java.util.List;
-import java.util.Set;
 
 public interface MeaningService {
     List<MeaningDTO> findByAbbreviationIdOrderByCountOfVotes(Long id);
-    MeaningDTO getMeaningForAbbreviation(Long abbreviationId, Long meaningId) throws Exception;
+    MeaningDTO getMeaningForAbbreviation(Long abbreviationId, Long meaningId);
     MeaningDTO createMeaningForAbbreviation(MeaningDTO meaningDTO, Long id);
-    MeaningDTO updateMeaningForAbbreviation(Long abbreviationId, Long meaningId, MeaningDTO meaningDTO) throws Exception;
-    void deleteMeaningForAbbreviation(Long abbreviationId, Long meaningId) throws Exception;
+    MeaningDTO updateMeaningForAbbreviation(Long abbreviationId, Long meaningId, MeaningDTO meaningDTO);
+    void deleteMeaningForAbbreviation(Long abbreviationId, Long meaningId);
 }
