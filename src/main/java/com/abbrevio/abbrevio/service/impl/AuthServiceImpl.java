@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(RegisterDTO registerDto) throws CustomAuthException {
+    public void register(RegisterDTO registerDto) throws CustomAuthException {
 
         if (userRepository.existsByUsername(registerDto.getUsername())) {
             throw new CustomAuthException("username is already taken");
@@ -78,7 +78,5 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
 
         userRepository.save(user);
-
-        return "User registered successfully!";
     }
 }

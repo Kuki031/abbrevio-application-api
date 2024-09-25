@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.http.HttpResponse;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -33,9 +35,9 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/register", "/sign-up"})
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterDTO registerDto) throws Exception {
-        String response = authService.register(registerDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<HttpStatus> register(@Valid @RequestBody RegisterDTO registerDto) throws Exception {
+        authService.register(registerDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
 

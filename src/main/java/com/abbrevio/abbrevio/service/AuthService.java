@@ -7,5 +7,5 @@ import com.abbrevio.abbrevio.dto.RegisterDTO;
 public interface AuthService {
 
     String login(LoginDTO loginDto);
-    String register(RegisterDTO registerDto) throws Exception;
+    void register(RegisterDTO registerDto) throws Exception;
 }
