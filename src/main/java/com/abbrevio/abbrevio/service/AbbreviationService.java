@@ -8,6 +8,8 @@ public interface AbbreviationService {
     AbbreviationDTO createAbbreviation(AbbreviationDTO abbreviationDTO);
     List<AbbreviationDTO> getAllAbbreviations();
     AbbreviationDTO getAbbreviationById(Long id);
-    AbbreviationDTO updateAbbreviation(Long id, AbbreviationDTO abbreviationDTO);
-    void deleteAbbreviation(Long id);
+    AbbreviationDTO updateAbbreviation(Long id, AbbreviationDTO abbreviationDTO) throws Exception;
+    void deleteAbbreviation(Long id) throws Exception;
+
+    List<AbbreviationDTO> getAllContainingName(String name);
 }

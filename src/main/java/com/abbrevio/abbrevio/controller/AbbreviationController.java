@@ -5,6 +5,7 @@ import com.abbrevio.abbrevio.service.AbbreviationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,15 +39,18 @@ public class AbbreviationController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AbbreviationDTO> updateAbbreviation(@PathVariable Long id, @Valid @RequestBody AbbreviationDTO abbreviationDTO)
-    {
+    public ResponseEntity<AbbreviationDTO> updateAbbreviation(@PathVariable Long id, @Valid @RequestBody AbbreviationDTO abbreviationDTO) throws Exception {
         return ResponseEntity.ok(abbreviationService.updateAbbreviation(id, abbreviationDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteAbbreviation(@PathVariable Long id)
-    {
+    public ResponseEntity<HttpStatus> deleteAbbreviation(@PathVariable Long id) throws Exception {
         abbreviationService.deleteAbbreviation(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("contains/{name}")
+    public ResponseEntity<List<AbbreviationDTO>> getMatchingAbbreviations(@PathVariable String name) {
+        return ResponseEntity.ok(abbreviationService.getAllContainingName(name));
     }
 }

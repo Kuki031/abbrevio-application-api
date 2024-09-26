@@ -19,4 +19,6 @@ public class AbbreviationDTO {
             message = "abbreviation can only contain letters with dots or spaces between, but none in front")
     @NotBlank(message = "abbreviation's name cannot be blank")
     private String name;
+
+    private UserDTO user;
 }

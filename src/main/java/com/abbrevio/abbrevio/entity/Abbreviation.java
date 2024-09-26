@@ -29,4 +29,8 @@ public class Abbreviation {
             fetch = FetchType.LAZY
     )
     private Set<Meaning> meanings;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
