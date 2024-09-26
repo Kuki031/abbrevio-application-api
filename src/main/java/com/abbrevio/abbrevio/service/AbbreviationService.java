@@ -10,6 +10,6 @@ public interface AbbreviationService {
     AbbreviationDTO getAbbreviationById(Long id);
     AbbreviationDTO updateAbbreviation(Long id, AbbreviationDTO abbreviationDTO) throws Exception;
     void deleteAbbreviation(Long id) throws Exception;
-
     List<AbbreviationDTO> getAllContainingName(String name);
+    List<AbbreviationDTO> getMyAbbreviations();
 }

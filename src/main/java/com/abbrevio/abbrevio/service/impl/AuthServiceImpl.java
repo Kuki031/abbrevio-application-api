@@ -2,6 +2,7 @@ package com.abbrevio.abbrevio.service.impl;
 
 import com.abbrevio.abbrevio.dto.LoginDTO;
 import com.abbrevio.abbrevio.dto.RegisterDTO;
+import com.abbrevio.abbrevio.dto.UserDTO;
 import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.entity.Role;
 import com.abbrevio.abbrevio.entity.User;
@@ -12,6 +13,7 @@ import com.abbrevio.abbrevio.repository.RoleRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.security.JwtTokenProvider;
 import com.abbrevio.abbrevio.service.AuthService;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,14 +33,16 @@ public class AuthServiceImpl implements AuthService {
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ModelMapper modelMapper;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, DepartmentRepository departmentRepository) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, DepartmentRepository departmentRepository, ModelMapper modelMapper) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.departmentRepository = departmentRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -78,5 +82,16 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
 
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO getMe() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
+
+        return modelMapper.map(user, UserDTO.class);
     }
 }

@@ -7,7 +7,6 @@ import com.abbrevio.abbrevio.exception.CustomNotFoundException;
 import com.abbrevio.abbrevio.repository.AbbreviationRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.service.AbbreviationService;
-import com.abbrevio.abbrevio.service.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,6 +65,7 @@ public class AbbreviationServiceImpl implements AbbreviationService {
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
 
+
         if (!abbreviation.getUser().getId().equals(user.getId())) {
             throw new Exception(String.format("you cannot edit abbreviation with id %s, because you have not created it", id));
         }
@@ -94,8 +94,18 @@ public class AbbreviationServiceImpl implements AbbreviationService {
 
     @Override
     public List<AbbreviationDTO> getAllContainingName(String name) {
-        List<Abbreviation> abbreviations = abbreviationRepository.findByNameContaining(name);
+        List<Abbreviation> abbreviations = abbreviationRepository.findByNameContainingOrderByName(name);
 
         return abbreviations.stream().map((abbreviation -> modelMapper.map(abbreviation, AbbreviationDTO.class))).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AbbreviationDTO> getMyAbbreviations() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
+
+        List<Abbreviation> abbreviations = abbreviationRepository.findByUserId(user.getId());
+        return abbreviations.stream().map((abbrev) -> modelMapper.map(abbrev, AbbreviationDTO.class)).collect(Collectors.toList());
     }
 }

@@ -53,4 +53,10 @@ public class AbbreviationController {
     public ResponseEntity<List<AbbreviationDTO>> getMatchingAbbreviations(@PathVariable String name) {
         return ResponseEntity.ok(abbreviationService.getAllContainingName(name));
     }
+
+    @GetMapping("/my-abbreviations")
+    public ResponseEntity<List<AbbreviationDTO>> getMyAbbreviations()
+    {
+        return ResponseEntity.ok(abbreviationService.getMyAbbreviations());
+    }
 }
