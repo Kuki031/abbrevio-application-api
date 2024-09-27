@@ -1,5 +1,6 @@
 package com.abbrevio.abbrevio.dto;
 
+import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,4 +19,5 @@ public class UserDTO {
     private String username;
     private String email;
     private Set<Role> roles;
+    private DepartmentDTO department;
 }

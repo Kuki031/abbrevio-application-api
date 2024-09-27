@@ -33,6 +33,10 @@ public class Meaning {
     @OneToMany(mappedBy = "meaning", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Vote> vote;
 
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
     public void setCountOfVotes()
     {
         this.countOfVotes++;

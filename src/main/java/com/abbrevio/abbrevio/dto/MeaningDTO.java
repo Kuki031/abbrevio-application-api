@@ -17,4 +17,6 @@ public class MeaningDTO {
     @NotBlank(message = "description of meaning cannot be blank")
     private String description;
     private Long countOfVotes;
+    private UserDTO user;
+    private AbbreviationDTO abbreviation;
 }
