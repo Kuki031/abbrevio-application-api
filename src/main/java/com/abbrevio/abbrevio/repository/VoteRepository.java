@@ -5,4 +5,5 @@ import com.abbrevio.abbrevio.utils.VoteId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VoteRepository extends JpaRepository<Vote, VoteId> {
+    Vote findByMeaningIdAndUserId(Long meaningId, Long userId);
 }

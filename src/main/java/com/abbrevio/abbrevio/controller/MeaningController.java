@@ -1,6 +1,7 @@
 package com.abbrevio.abbrevio.controller;
 
 import com.abbrevio.abbrevio.dto.MeaningDTO;
+import com.abbrevio.abbrevio.dto.VoteDTO;
 import com.abbrevio.abbrevio.service.MeaningService;
 import com.abbrevio.abbrevio.service.VoteService;
 import jakarta.validation.Valid;
@@ -51,9 +52,14 @@ public class MeaningController {
     }
 
     @PostMapping("/votes/{meaningId}/meanings")
-    public ResponseEntity<String> castVoteForMeaning(@PathVariable Long meaningId)
+    public ResponseEntity<HttpStatus> castVoteForMeaning(@PathVariable Long meaningId)
     {
         voteService.castVote(meaningId);
-        return ResponseEntity.ok("you voted for meaning with id "+meaningId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/votes/{meaningId}/meanings")
+    public ResponseEntity<VoteDTO> getVote(@PathVariable Long meaningId) throws Exception {
+        return ResponseEntity.ok(voteService.getVoteByMeaningIdAndUserId(meaningId));
     }
 }

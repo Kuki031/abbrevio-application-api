@@ -1,5 +1,6 @@
 package com.abbrevio.abbrevio.service.impl;
 
+import com.abbrevio.abbrevio.dto.VoteDTO;
 import com.abbrevio.abbrevio.entity.Meaning;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.entity.Vote;
@@ -9,9 +10,11 @@ import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.repository.VoteRepository;
 import com.abbrevio.abbrevio.service.VoteService;
 import com.abbrevio.abbrevio.utils.VoteId;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 @Service
 public class VoteServiceImpl implements VoteService {
@@ -21,11 +24,13 @@ public class VoteServiceImpl implements VoteService {
     private final MeaningRepository meaningRepository;
     private final VoteId voteId;
     private final VoteRepository voteRepository;
+    private final ModelMapper modelMapper;
 
-    public VoteServiceImpl(UserRepository userRepository, MeaningRepository meaningRepository, VoteId voteId, VoteRepository voteRepository) {
+    public VoteServiceImpl(UserRepository userRepository, MeaningRepository meaningRepository, VoteId voteId, VoteRepository voteRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.voteRepository = voteRepository;
         this.meaningRepository = meaningRepository;
+        this.modelMapper = modelMapper;
         this.voteId = voteId;
     }
 
@@ -57,5 +62,25 @@ public class VoteServiceImpl implements VoteService {
         {
             throw new IllegalStateException("you have already voted for this meaning");
         }
+    }
+
+    @Override
+    public VoteDTO getVoteByMeaningIdAndUserId(Long meaningId) throws Exception {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
+
+        Meaning meaning = meaningRepository.findById(meaningId)
+                .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
+
+        Vote vote = voteRepository.findByMeaningIdAndUserId(meaning.getId(), user.getId());
+
+        if (vote == null)
+        {
+            throw new Exception(String.format("User with id: %s never voted for meaning with id: %s", user.getId(), meaning.getId()));
+        }
+
+        return modelMapper.map(vote, VoteDTO.class);
     }
 }
