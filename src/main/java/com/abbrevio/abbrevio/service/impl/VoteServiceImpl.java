@@ -54,7 +54,7 @@ public class VoteServiceImpl implements VoteService {
             vote.setUser(user);
             vote.setMeaning(meaning);
             voteRepository.save(vote);
-            meaning.setCountOfVotes(true);
+            meaning.setCountOfVotes(meaning.getCountOfVotes() + 1);
 
             meaningRepository.save(meaning);
         }
@@ -81,7 +81,7 @@ public class VoteServiceImpl implements VoteService {
         {
             throw new Exception(String.format("User with id: %s never voted for meaning with id: %s", user.getId(), meaning.getId()));
         }
-        meaning.setCountOfVotes(false);
+        meaning.setCountOfVotes(meaning.getCountOfVotes() - 1);
         voteRepository.delete(vote);
     }
 
@@ -99,9 +99,8 @@ public class VoteServiceImpl implements VoteService {
 
         if (vote == null)
         {
-            throw new Exception(String.format("User with id: %s never voted for meaning with id: %s", user.getId(), meaning.getId()));
+            throw new Exception(String.format("vote does not exist"));
         }
-
         return modelMapper.map(vote, VoteDTO.class);
     }
 }
