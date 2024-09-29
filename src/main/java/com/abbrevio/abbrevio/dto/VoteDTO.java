@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class VoteDTO {
 
-    private MeaningDTO meaningId;
-    private UserDTO userId;
+    private Long meaningId;
+    private Long userId;
 }

@@ -18,5 +18,5 @@ public class MeaningDTO {
     private String description;
     private Long countOfVotes;
     private UserDTO user;
-    private AbbreviationDTO abbreviation;
+    private Long abbreviationId;
 }
