@@ -70,7 +70,7 @@ public class MeaningServiceImpl implements MeaningService {
         meaning.setDescription(meaningDTO.getDescription());
         meaning.setAbbreviation(abbreviation);
         meaning.setUser(user);
-        meaning.setCountOfVotes((long) 0);
+        meaning.setCountOfVotesInitially();
         meaningRepository.save(meaning);
 
         return modelMapper.map(meaning, MeaningDTO.class);

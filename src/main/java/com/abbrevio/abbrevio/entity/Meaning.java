@@ -37,8 +37,15 @@ public class Meaning {
     @JoinColumn(name="user_id")
     private User user;
 
-    public void setCountOfVotes()
+    public void setCountOfVotes(boolean isVoting)
     {
-        this.countOfVotes++;
+        if (isVoting) {
+            this.countOfVotes++;
+        } else this.countOfVotes--;
+    }
+
+    public void setCountOfVotesInitially()
+    {
+        this.countOfVotes = (long) 0;
     }
 }

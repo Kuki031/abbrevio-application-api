@@ -58,6 +58,12 @@ public class MeaningController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/votes/{meaningId}/meanings")
+    public ResponseEntity<HttpStatus> castUnVoteForMeaning(@PathVariable Long meaningId) throws Exception {
+        voteService.castUnVote(meaningId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @GetMapping("/votes/{meaningId}/meanings")
     public ResponseEntity<VoteDTO> getVote(@PathVariable Long meaningId) throws Exception {
         return ResponseEntity.ok(voteService.getVoteByMeaningIdAndUserId(meaningId));

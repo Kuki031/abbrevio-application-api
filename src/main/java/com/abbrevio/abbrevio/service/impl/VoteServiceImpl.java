@@ -54,7 +54,7 @@ public class VoteServiceImpl implements VoteService {
             vote.setUser(user);
             vote.setMeaning(meaning);
             voteRepository.save(vote);
-            meaning.setCountOfVotes();
+            meaning.setCountOfVotes(true);
 
             meaningRepository.save(meaning);
         }
@@ -62,6 +62,27 @@ public class VoteServiceImpl implements VoteService {
         {
             throw new IllegalStateException("you have already voted for this meaning");
         }
+    }
+
+    @Override
+    public void castUnVote(Long meaningId) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
+
+        Meaning meaning = meaningRepository.findById(meaningId)
+                .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
+
+        Vote vote = voteRepository.findByMeaningIdAndUserId(meaningId, user.getId());
+
+        if (vote == null)
+        {
+            throw new Exception(String.format("User with id: %s never voted for meaning with id: %s", user.getId(), meaning.getId()));
+        }
+        meaning.setCountOfVotes(false);
+        voteRepository.delete(vote);
     }
 
     @Override
