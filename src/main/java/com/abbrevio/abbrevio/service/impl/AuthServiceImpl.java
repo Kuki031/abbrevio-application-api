@@ -1,19 +1,19 @@
 package com.abbrevio.abbrevio.service.impl;
 
-import com.abbrevio.abbrevio.payload.LoginDTO;
-import com.abbrevio.abbrevio.payload.RegisterDTO;
-import com.abbrevio.abbrevio.payload.user.UserDTO;
 import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.entity.Role;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomAuthException;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
+import com.abbrevio.abbrevio.payload.LoginDTO;
+import com.abbrevio.abbrevio.payload.RegisterDTO;
 import com.abbrevio.abbrevio.payload.user.UserDetailsDTO;
 import com.abbrevio.abbrevio.repository.DepartmentRepository;
 import com.abbrevio.abbrevio.repository.RoleRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.security.JwtTokenProvider;
 import com.abbrevio.abbrevio.service.AuthService;
+import com.abbrevio.abbrevio.utils.AuthRetrieval;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,8 +35,9 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final ModelMapper modelMapper;
+    private final AuthRetrieval authRetrieval;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, DepartmentRepository departmentRepository, ModelMapper modelMapper) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, DepartmentRepository departmentRepository, ModelMapper modelMapper, AuthRetrieval authRetrieval) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -44,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
         this.departmentRepository = departmentRepository;
         this.modelMapper = modelMapper;
+        this.authRetrieval = authRetrieval;
     }
 
     @Override

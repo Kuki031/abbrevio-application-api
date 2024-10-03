@@ -1,15 +1,14 @@
 package com.abbrevio.abbrevio.service.impl;
 
-import com.abbrevio.abbrevio.payload.AbbreviationDTO;
 import com.abbrevio.abbrevio.entity.Abbreviation;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
+import com.abbrevio.abbrevio.payload.AbbreviationDTO;
 import com.abbrevio.abbrevio.repository.AbbreviationRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.service.AbbreviationService;
+import com.abbrevio.abbrevio.utils.AuthRetrieval;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,22 +18,19 @@ import java.util.stream.Collectors;
 public class AbbreviationServiceImpl implements AbbreviationService {
 
     private final AbbreviationRepository abbreviationRepository;
-    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final AuthRetrieval authRetrieval;
 
-    public AbbreviationServiceImpl(AbbreviationRepository abbreviationRepository, ModelMapper modelMapper, UserRepository userRepository) {
+    public AbbreviationServiceImpl(AbbreviationRepository abbreviationRepository, ModelMapper modelMapper, UserRepository userRepository, AuthRetrieval authRetrieval) {
         this.abbreviationRepository = abbreviationRepository;
         this.modelMapper = modelMapper;
-        this.userRepository = userRepository;
+        this.authRetrieval = authRetrieval;
     }
 
     @Override
     public AbbreviationDTO createAbbreviation(AbbreviationDTO abbreviationDTO) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
-
+        User user = (User) authRetrieval.retrieveUsername(true);
         Abbreviation abbreviation = new Abbreviation();
         abbreviation.setName(abbreviationDTO.getName());
         abbreviation.setUser(user);
@@ -61,10 +57,7 @@ public class AbbreviationServiceImpl implements AbbreviationService {
         Abbreviation abbreviation = abbreviationRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", id));
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
-
+        User user = (User) authRetrieval.retrieveUsername(true);
 
         if (!abbreviation.getUser().getId().equals(user.getId())) {
             throw new Exception(String.format("you cannot edit abbreviation with id %s, because you have not created it", id));
@@ -82,9 +75,7 @@ public class AbbreviationServiceImpl implements AbbreviationService {
     public void deleteAbbreviation(Long id) throws Exception {
         Abbreviation abbreviation = abbreviationRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", id));
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
+        User user = (User) authRetrieval.retrieveUsername(true);
 
         if (!abbreviation.getUser().getId().equals(user.getId())) {
             throw new Exception(String.format("you cannot delete abbreviation with id %s, because you have not created it", id));
@@ -101,11 +92,8 @@ public class AbbreviationServiceImpl implements AbbreviationService {
 
     @Override
     public List<AbbreviationDTO> getMyAbbreviations() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
-
-        List<Abbreviation> abbreviations = abbreviationRepository.findByUserId(user.getId());
+        String username = (String) authRetrieval.retrieveUsername(false);
+        List<Abbreviation> abbreviations = abbreviationRepository.findByUserUsername(username);
         return abbreviations.stream().map((abbrev) -> modelMapper.map(abbrev, AbbreviationDTO.class)).collect(Collectors.toList());
     }
 }

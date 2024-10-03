@@ -22,4 +22,7 @@ public interface AbbreviationRepository extends JpaRepository<Abbreviation, Long
 
     @EntityGraph(attributePaths = {"user"})
     List<Abbreviation> findByUserId(Long id);
+
+    @EntityGraph(attributePaths = {"user"})
+    List<Abbreviation> findByUserUsername(String username);
 }

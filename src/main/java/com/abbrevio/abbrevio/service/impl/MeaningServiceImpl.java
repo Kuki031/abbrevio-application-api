@@ -9,6 +9,7 @@ import com.abbrevio.abbrevio.repository.AbbreviationRepository;
 import com.abbrevio.abbrevio.repository.MeaningRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.service.MeaningService;
+import com.abbrevio.abbrevio.utils.AuthRetrieval;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,12 +25,14 @@ public class MeaningServiceImpl implements MeaningService {
     private final AbbreviationRepository abbreviationRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final AuthRetrieval authRetrieval;
 
-    public MeaningServiceImpl(MeaningRepository meaningRepository, ModelMapper modelMapper, AbbreviationRepository abbreviationRepository, UserRepository userRepository) {
+    public MeaningServiceImpl(AuthRetrieval authRetrieval, MeaningRepository meaningRepository, ModelMapper modelMapper, AbbreviationRepository abbreviationRepository, UserRepository userRepository) {
         this.meaningRepository = meaningRepository;
         this.modelMapper = modelMapper;
         this.abbreviationRepository = abbreviationRepository;
         this.userRepository = userRepository;
+        this.authRetrieval = authRetrieval;
     }
 
     @Override
@@ -60,10 +63,7 @@ public class MeaningServiceImpl implements MeaningService {
         Abbreviation abbreviation = abbreviationRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", id));
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
+        User user = (User) authRetrieval.retrieveUsername(true);
 
         Meaning meaning = new Meaning();
         meaning.setDescription(meaningDTO.getDescription());
@@ -83,9 +83,7 @@ public class MeaningServiceImpl implements MeaningService {
         {
             throw new CustomNotFoundException(Meaning.class, "id", meaningId);
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
+        User user = (User) authRetrieval.retrieveUsername(true);
 
         if (!meaning.getUser().getId().equals(user.getId()))
         {
@@ -109,9 +107,7 @@ public class MeaningServiceImpl implements MeaningService {
         {
             throw new CustomNotFoundException(Meaning.class, "id", meaningId);
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
+        User user = (User) authRetrieval.retrieveUsername(true);
         if (!meaning.getUser().getId().equals(user.getId()))
         {
             throw new Exception(String.format("you can't edit meaning with id %s, because you haven't created it", meaning.getId()));

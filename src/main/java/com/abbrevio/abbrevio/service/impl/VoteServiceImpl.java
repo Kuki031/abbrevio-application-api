@@ -9,6 +9,7 @@ import com.abbrevio.abbrevio.repository.MeaningRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.repository.VoteRepository;
 import com.abbrevio.abbrevio.service.VoteService;
+import com.abbrevio.abbrevio.utils.AuthRetrieval;
 import com.abbrevio.abbrevio.utils.VoteId;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
@@ -24,23 +25,21 @@ public class VoteServiceImpl implements VoteService {
     private final VoteId voteId;
     private final VoteRepository voteRepository;
     private final ModelMapper modelMapper;
+    private final AuthRetrieval authRetrieval;
 
-    public VoteServiceImpl(UserRepository userRepository, MeaningRepository meaningRepository, VoteId voteId, VoteRepository voteRepository, ModelMapper modelMapper) {
+    public VoteServiceImpl(AuthRetrieval authRetrieval, UserRepository userRepository, MeaningRepository meaningRepository, VoteId voteId, VoteRepository voteRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.voteRepository = voteRepository;
         this.meaningRepository = meaningRepository;
         this.modelMapper = modelMapper;
         this.voteId = voteId;
+        this.authRetrieval = authRetrieval;
     }
 
     @Override
     public void castVote(Long meaningId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
-
+        User user = (User) authRetrieval.retrieveUsername(true);
         Meaning meaning = meaningRepository.findById(meaningId)
                 .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
 
@@ -65,12 +64,8 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public void castUnVote(Long meaningId) throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
-
+        User user = (User) authRetrieval.retrieveUsername(true);
         Meaning meaning = meaningRepository.findById(meaningId)
                 .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
 
@@ -87,10 +82,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public VoteDTO getVoteByMeaningIdAndUserId(Long meaningId) throws Exception {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", authentication.getName()));
-
+        User user = (User) authRetrieval.retrieveUsername(true);
         Meaning meaning = meaningRepository.findById(meaningId)
                 .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
 

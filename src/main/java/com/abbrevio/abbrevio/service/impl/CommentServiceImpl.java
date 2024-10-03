@@ -1,18 +1,17 @@
 package com.abbrevio.abbrevio.service.impl;
 
-import com.abbrevio.abbrevio.payload.comment.CommentDTO;
 import com.abbrevio.abbrevio.entity.Comment;
 import com.abbrevio.abbrevio.entity.Meaning;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
+import com.abbrevio.abbrevio.payload.comment.CommentDTO;
 import com.abbrevio.abbrevio.payload.comment.CommentDetailsDTO;
 import com.abbrevio.abbrevio.repository.CommentRepository;
 import com.abbrevio.abbrevio.repository.MeaningRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.service.CommentService;
+import com.abbrevio.abbrevio.utils.AuthRetrieval;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,25 +21,22 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
     private final MeaningRepository meaningRepository;
     private final ModelMapper modelMapper;
+    private final AuthRetrieval authRetrieval;
 
-    public CommentServiceImpl(CommentRepository commentRepository, ModelMapper modelMapper, UserRepository userRepository, MeaningRepository meaningRepository) {
+    public CommentServiceImpl(AuthRetrieval authRetrieval, CommentRepository commentRepository, ModelMapper modelMapper, UserRepository userRepository, MeaningRepository meaningRepository) {
         this.commentRepository = commentRepository;
         this.modelMapper = modelMapper;
-        this.userRepository = userRepository;
         this.meaningRepository = meaningRepository;
+        this.authRetrieval = authRetrieval;
     }
 
     @Override
     public CommentDTO createCommentForMeaning(Long meaningId, CommentDTO commentDTO) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        User user = (User) authRetrieval.retrieveUsername(true);
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
         Meaning meaning = meaningRepository.findById(meaningId)
                 .orElseThrow(() -> new CustomNotFoundException(Meaning.class, "id", meaningId));
 
@@ -73,11 +69,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO updateCommentForMeaningById(Long meaningId, Long commentId, CommentDTO commentDTO) throws Exception {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
+        User user = (User) authRetrieval.retrieveUsername(true);
 
         Comment comment = commentRepository.findByIdAndMeaningId(commentId, meaningId);
 
@@ -103,11 +95,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteCommentForMeaningById(Long meaningId, Long commentId) throws Exception {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
+        User user = (User) authRetrieval.retrieveUsername(true);
 
         Comment comment = commentRepository.findByIdAndMeaningId(commentId, meaningId);
         if (comment == null)
