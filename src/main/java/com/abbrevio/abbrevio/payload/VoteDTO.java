@@ -1,4 +1,4 @@
-package com.abbrevio.abbrevio.dto;
+package com.abbrevio.abbrevio.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

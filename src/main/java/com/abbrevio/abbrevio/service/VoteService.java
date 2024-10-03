@@ -1,6 +1,6 @@
 package com.abbrevio.abbrevio.service;
 
-import com.abbrevio.abbrevio.dto.VoteDTO;
+import com.abbrevio.abbrevio.payload.VoteDTO;
 
 public interface VoteService {
 

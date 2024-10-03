@@ -30,7 +30,7 @@ public class Abbreviation {
     )
     private Set<Meaning> meanings;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }

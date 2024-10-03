@@ -23,7 +23,7 @@ public class Meaning {
     private String description;
     private Long countOfVotes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "abbreviation_id")
     private Abbreviation abbreviation;
 
@@ -33,7 +33,7 @@ public class Meaning {
     @OneToMany(mappedBy = "meaning", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Vote> vote;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 

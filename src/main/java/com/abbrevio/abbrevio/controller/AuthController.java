@@ -1,10 +1,12 @@
 package com.abbrevio.abbrevio.controller;
 
 
-import com.abbrevio.abbrevio.dto.JWTAuthResponse;
-import com.abbrevio.abbrevio.dto.LoginDTO;
-import com.abbrevio.abbrevio.dto.RegisterDTO;
-import com.abbrevio.abbrevio.dto.UserDTO;
+import com.abbrevio.abbrevio.entity.User;
+import com.abbrevio.abbrevio.payload.JWTAuthResponse;
+import com.abbrevio.abbrevio.payload.LoginDTO;
+import com.abbrevio.abbrevio.payload.RegisterDTO;
+import com.abbrevio.abbrevio.payload.user.UserDTO;
+import com.abbrevio.abbrevio.payload.user.UserDetailsDTO;
 import com.abbrevio.abbrevio.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,7 +39,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> getMe() {
+    public ResponseEntity<UserDetailsDTO> getMe() {
         return ResponseEntity.ok(authService.getMe());
     }
 }

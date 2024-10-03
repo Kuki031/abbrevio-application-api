@@ -1,6 +1,6 @@
 package com.abbrevio.abbrevio.service;
 
-import com.abbrevio.abbrevio.dto.UserDTO;
+import com.abbrevio.abbrevio.payload.user.UserDTO;
 
 import java.util.List;
 

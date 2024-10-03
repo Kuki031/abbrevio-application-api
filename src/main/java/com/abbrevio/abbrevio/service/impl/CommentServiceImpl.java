@@ -1,10 +1,11 @@
 package com.abbrevio.abbrevio.service.impl;
 
-import com.abbrevio.abbrevio.dto.CommentDTO;
+import com.abbrevio.abbrevio.payload.comment.CommentDTO;
 import com.abbrevio.abbrevio.entity.Comment;
 import com.abbrevio.abbrevio.entity.Meaning;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
+import com.abbrevio.abbrevio.payload.comment.CommentDetailsDTO;
 import com.abbrevio.abbrevio.repository.CommentRepository;
 import com.abbrevio.abbrevio.repository.MeaningRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
@@ -53,10 +54,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDTO> getAllCommentsForMeaning(Long meaningId) {
+    public List<CommentDetailsDTO> getAllCommentsForMeaning(Long meaningId) {
 
-        List<Comment> comments = commentRepository.findByMeaningIdOrderByCreatedAtDesc(meaningId);
-        return comments.stream().map((comment) -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toList());
+        List<Comment> comments = commentRepository.findWithUserByMeaningIdOrderByCreatedAtDesc(meaningId);
+        return comments.stream().map((comment) -> modelMapper.map(comment, CommentDetailsDTO.class)).collect(Collectors.toList());
     }
 
     @Override

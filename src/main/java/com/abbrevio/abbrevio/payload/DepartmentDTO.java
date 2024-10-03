@@ -1,4 +1,4 @@
-package com.abbrevio.abbrevio.dto;
+package com.abbrevio.abbrevio.payload;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

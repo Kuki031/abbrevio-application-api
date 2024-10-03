@@ -1,13 +1,14 @@
 package com.abbrevio.abbrevio.service.impl;
 
-import com.abbrevio.abbrevio.dto.LoginDTO;
-import com.abbrevio.abbrevio.dto.RegisterDTO;
-import com.abbrevio.abbrevio.dto.UserDTO;
+import com.abbrevio.abbrevio.payload.LoginDTO;
+import com.abbrevio.abbrevio.payload.RegisterDTO;
+import com.abbrevio.abbrevio.payload.user.UserDTO;
 import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.entity.Role;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomAuthException;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
+import com.abbrevio.abbrevio.payload.user.UserDetailsDTO;
 import com.abbrevio.abbrevio.repository.DepartmentRepository;
 import com.abbrevio.abbrevio.repository.RoleRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
@@ -85,13 +86,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDTO getMe() {
+    public UserDetailsDTO getMe() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findWithRolesAndDepartmentByUsername(username)
                 .orElseThrow(() -> new CustomNotFoundException(User.class, "username", username));
 
-        return modelMapper.map(user, UserDTO.class);
+        return modelMapper.map(user, UserDetailsDTO.class);
     }
 }

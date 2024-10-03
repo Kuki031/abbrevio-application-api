@@ -1,6 +1,6 @@
 package com.abbrevio.abbrevio.service.impl;
 
-import com.abbrevio.abbrevio.dto.DepartmentDTO;
+import com.abbrevio.abbrevio.payload.DepartmentDTO;
 import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
 import com.abbrevio.abbrevio.repository.DepartmentRepository;

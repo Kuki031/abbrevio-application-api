@@ -1,12 +1,11 @@
-package com.abbrevio.abbrevio.dto;
+package com.abbrevio.abbrevio.payload;
 
+import com.abbrevio.abbrevio.payload.user.UserDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -21,5 +20,5 @@ public class MeaningDTO {
     private Long countOfVotes;
     private UserDTO user;
     private Long abbreviationId;
-    private List<CommentDTO> comments;
+
 }

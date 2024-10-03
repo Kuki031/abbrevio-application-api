@@ -1,8 +1,7 @@
 package com.abbrevio.abbrevio.service.impl;
 
-import com.abbrevio.abbrevio.dto.MeaningDTO;
+import com.abbrevio.abbrevio.payload.MeaningDTO;
 import com.abbrevio.abbrevio.entity.Abbreviation;
-import com.abbrevio.abbrevio.entity.Comment;
 import com.abbrevio.abbrevio.entity.Meaning;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;

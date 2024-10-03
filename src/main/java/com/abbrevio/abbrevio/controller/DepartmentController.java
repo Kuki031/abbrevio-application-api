@@ -1,7 +1,7 @@
 package com.abbrevio.abbrevio.controller;
 
-import com.abbrevio.abbrevio.dto.DepartmentDTO;
-import com.abbrevio.abbrevio.dto.UserDTO;
+import com.abbrevio.abbrevio.payload.DepartmentDTO;
+import com.abbrevio.abbrevio.payload.user.UserDTO;
 import com.abbrevio.abbrevio.service.DepartmentService;
 import com.abbrevio.abbrevio.service.UserService;
 import jakarta.validation.Valid;

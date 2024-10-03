@@ -1,6 +1,6 @@
 package com.abbrevio.abbrevio.service.impl;
 
-import com.abbrevio.abbrevio.dto.VoteDTO;
+import com.abbrevio.abbrevio.payload.VoteDTO;
 import com.abbrevio.abbrevio.entity.Meaning;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.entity.Vote;
@@ -14,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 @Service
 public class VoteServiceImpl implements VoteService {

@@ -1,11 +1,10 @@
 package com.abbrevio.abbrevio.controller;
 
-import com.abbrevio.abbrevio.dto.AbbreviationDTO;
+import com.abbrevio.abbrevio.payload.AbbreviationDTO;
 import com.abbrevio.abbrevio.service.AbbreviationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

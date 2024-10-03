@@ -1,7 +1,7 @@
 package com.abbrevio.abbrevio.controller;
 
-import com.abbrevio.abbrevio.dto.MeaningDTO;
-import com.abbrevio.abbrevio.dto.VoteDTO;
+import com.abbrevio.abbrevio.payload.MeaningDTO;
+import com.abbrevio.abbrevio.payload.VoteDTO;
 import com.abbrevio.abbrevio.service.MeaningService;
 import com.abbrevio.abbrevio.service.VoteService;
 import jakarta.validation.Valid;

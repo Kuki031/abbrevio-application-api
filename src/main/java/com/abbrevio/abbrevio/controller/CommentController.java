@@ -1,6 +1,7 @@
 package com.abbrevio.abbrevio.controller;
 
-import com.abbrevio.abbrevio.dto.CommentDTO;
+import com.abbrevio.abbrevio.payload.comment.CommentDTO;
+import com.abbrevio.abbrevio.payload.comment.CommentDetailsDTO;
 import com.abbrevio.abbrevio.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentDTO>> getAllCommentsForMeaning(@PathVariable Long meaningId)
+    public ResponseEntity<List<CommentDetailsDTO>> getAllCommentsForMeaning(@PathVariable Long meaningId)
     {
         return ResponseEntity.ok(commentService.getAllCommentsForMeaning(meaningId));
     }

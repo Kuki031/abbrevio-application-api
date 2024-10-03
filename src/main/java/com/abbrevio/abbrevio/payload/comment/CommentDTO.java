@@ -1,4 +1,4 @@
-package com.abbrevio.abbrevio.dto;
+package com.abbrevio.abbrevio.payload.comment;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,5 @@ public class CommentDTO {
 
     @NotBlank(message = "comment cannot be blank")
     private String content;
-    private UserDTO user;
-
     private LocalDateTime createdAt;
 }

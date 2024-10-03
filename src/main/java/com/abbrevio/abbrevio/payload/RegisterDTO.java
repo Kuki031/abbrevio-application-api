@@ -1,6 +1,5 @@
-package com.abbrevio.abbrevio.dto;
+package com.abbrevio.abbrevio.payload;
 
-import com.abbrevio.abbrevio.entity.Department;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

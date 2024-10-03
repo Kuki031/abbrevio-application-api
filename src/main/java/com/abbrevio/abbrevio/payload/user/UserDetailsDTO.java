@@ -1,7 +1,7 @@
-package com.abbrevio.abbrevio.dto;
+package com.abbrevio.abbrevio.payload.user;
 
-import com.abbrevio.abbrevio.entity.Department;
 import com.abbrevio.abbrevio.entity.Role;
+import com.abbrevio.abbrevio.payload.DepartmentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +11,9 @@ import java.util.Set;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+@AllArgsConstructor
+public class UserDetailsDTO {
 
     private Long id;
     private String username;
