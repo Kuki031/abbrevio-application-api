@@ -3,7 +3,8 @@ package com.abbrevio.abbrevio.service.impl;
 import com.abbrevio.abbrevio.entity.Abbreviation;
 import com.abbrevio.abbrevio.entity.User;
 import com.abbrevio.abbrevio.exception.CustomNotFoundException;
-import com.abbrevio.abbrevio.payload.AbbreviationDTO;
+import com.abbrevio.abbrevio.payload.abbreviation.AbbreviationDTO;
+import com.abbrevio.abbrevio.payload.abbreviation.AbbreviationWithUserDTO;
 import com.abbrevio.abbrevio.repository.AbbreviationRepository;
 import com.abbrevio.abbrevio.repository.UserRepository;
 import com.abbrevio.abbrevio.service.AbbreviationService;
@@ -40,9 +41,9 @@ public class AbbreviationServiceImpl implements AbbreviationService {
     }
 
     @Override
-    public List<AbbreviationDTO> getAllAbbreviations() {
+    public List<AbbreviationWithUserDTO> getAllAbbreviations() {
         List<Abbreviation> abbreviations = abbreviationRepository.findAll();
-        return abbreviations.stream().map((abbrev) -> modelMapper.map(abbrev, AbbreviationDTO.class)).collect(Collectors.toList());
+        return abbreviations.stream().map((abbrev) -> modelMapper.map(abbrev, AbbreviationWithUserDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -84,16 +85,29 @@ public class AbbreviationServiceImpl implements AbbreviationService {
     }
 
     @Override
-    public List<AbbreviationDTO> getAllContainingName(String name) {
+    public List<AbbreviationWithUserDTO> getAllContainingName(String name) {
         List<Abbreviation> abbreviations = abbreviationRepository.findByNameContainingOrderByName(name);
 
-        return abbreviations.stream().map((abbreviation -> modelMapper.map(abbreviation, AbbreviationDTO.class))).collect(Collectors.toList());
+        return abbreviations.stream().map((abbreviation -> modelMapper.map(abbreviation, AbbreviationWithUserDTO.class))).collect(Collectors.toList());
     }
 
     @Override
-    public List<AbbreviationDTO> getMyAbbreviations() {
+    public List<AbbreviationWithUserDTO> getMyAbbreviations() {
         String username = (String) authRetrieval.retrieveUsername(false);
         List<Abbreviation> abbreviations = abbreviationRepository.findByUserUsername(username);
-        return abbreviations.stream().map((abbrev) -> modelMapper.map(abbrev, AbbreviationDTO.class)).collect(Collectors.toList());
+        return abbreviations.stream().map((abbrev) -> modelMapper.map(abbrev, AbbreviationWithUserDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AbbreviationDTO> getTopTenSearches() {
+
+        List<Abbreviation> abbreviations = abbreviationRepository.findTop10ByOrderByAccessedAtDesc();
+        return abbreviations.stream().map(abbrev -> modelMapper.map(abbrev, AbbreviationDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AbbreviationWithUserDTO> getRecentlyAdded() {
+        List<Abbreviation> abbreviations = abbreviationRepository.findTop10ByOrderByCreatedAtDesc();
+        return abbreviations.stream().map(abbrev -> modelMapper.map(abbrev, AbbreviationWithUserDTO.class)).collect(Collectors.toList());
     }
 }

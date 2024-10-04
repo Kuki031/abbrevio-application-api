@@ -13,6 +13,10 @@ public interface AbbreviationRepository extends JpaRepository<Abbreviation, Long
     @EntityGraph(attributePaths = {"user"})
     List<Abbreviation> findAll();
 
+    List<Abbreviation> findTop10ByOrderByAccessedAtDesc();
+
+    List<Abbreviation> findTop10ByOrderByCreatedAtDesc();
+
     @Override
     @EntityGraph(attributePaths = {"user"})
     Optional<Abbreviation> findById(Long abbreviationId);

@@ -1,6 +1,7 @@
 package com.abbrevio.abbrevio.controller;
 
-import com.abbrevio.abbrevio.payload.AbbreviationDTO;
+import com.abbrevio.abbrevio.payload.abbreviation.AbbreviationDTO;
+import com.abbrevio.abbrevio.payload.abbreviation.AbbreviationWithUserDTO;
 import com.abbrevio.abbrevio.service.AbbreviationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class AbbreviationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AbbreviationDTO>> getAllAbbreviations()
+    public ResponseEntity<List<AbbreviationWithUserDTO>> getAllAbbreviations()
     {
         return ResponseEntity.ok(abbreviationService.getAllAbbreviations());
     }
@@ -49,13 +50,25 @@ public class AbbreviationController {
     }
 
     @GetMapping("contains/{name}")
-    public ResponseEntity<List<AbbreviationDTO>> getMatchingAbbreviations(@PathVariable String name) {
+    public ResponseEntity<List<AbbreviationWithUserDTO>> getMatchingAbbreviations(@PathVariable String name) {
         return ResponseEntity.ok(abbreviationService.getAllContainingName(name));
     }
 
     @GetMapping("/my-abbreviations")
-    public ResponseEntity<List<AbbreviationDTO>> getMyAbbreviations()
+    public ResponseEntity<List<AbbreviationWithUserDTO>> getMyAbbreviations()
     {
         return ResponseEntity.ok(abbreviationService.getMyAbbreviations());
+    }
+
+    @GetMapping("/recently-searched")
+    public ResponseEntity<List<AbbreviationDTO>> getRecentlySearchedAbbreviations()
+    {
+        return ResponseEntity.ok(abbreviationService.getTopTenSearches());
+    }
+
+    @GetMapping("/recently-added")
+    public ResponseEntity<List<AbbreviationWithUserDTO>> getRecentlyAddedAbbreviations()
+    {
+        return ResponseEntity.ok(abbreviationService.getRecentlyAdded());
     }
 }

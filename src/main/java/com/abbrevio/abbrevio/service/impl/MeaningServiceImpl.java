@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,10 @@ public class MeaningServiceImpl implements MeaningService {
 
         Abbreviation abbreviation = abbreviationRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(Abbreviation.class, "id", id));
+
+        abbreviation.setAccessedAt(new Date(System.currentTimeMillis()));
+
+        abbreviationRepository.save(abbreviation);
 
         List<Meaning> meanings = meaningRepository.findByAbbreviationIdOrderByCountOfVotesDesc(id);
         return meanings.stream().map((meaning) -> modelMapper.map(meaning, MeaningDTO.class)).collect(Collectors.toList());
